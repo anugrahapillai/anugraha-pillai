@@ -1,0 +1,362 @@
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+@keyframes float-subtle {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(3deg); }
+}
+
+@keyframes float-orb {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -40px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+@keyframes sparkle-fade {
+  0% { opacity: 1; transform: scale(1) translate(0, 0); }
+  100% { opacity: 0; transform: scale(0.2) translate(var(--dx, 0), var(--dy, 20px)); }
+}
+
+@keyframes text-shimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes rotate-clockwise {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes rotate-counter-clockwise {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+
+@keyframes pulse-aura {
+  0%, 100% { transform: scale(1); opacity: 0.55; }
+  50% { transform: scale(1.08); opacity: 0.9; }
+}
+
+/* Smooth Glassmorphic Popup Dialog Entry & Exit Animations */
+@keyframes dialog-backdrop-fade-in {
+  0% { opacity: 0; backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); }
+  100% { opacity: 1; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+}
+
+@keyframes dialog-backdrop-fade-out {
+  0% { opacity: 1; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+  100% { opacity: 0; backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); }
+}
+
+@keyframes dialog-modal-pop-in {
+  0% { opacity: 0; transform: scale(0.92) translateY(24px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes dialog-modal-pop-out {
+  0% { opacity: 1; transform: scale(1) translateY(0); }
+  100% { opacity: 0; transform: scale(0.94) translateY(16px); }
+}
+
+.animate-glow {
+  animation: pulse-glow 6s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float-subtle 5s ease-in-out infinite;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #ffffff 0%, #c77dff 50%, #4cc9f0 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-shimmer 8s ease infinite;
+}
+
+/* Custom Airplane Cursor & Sparkling Trail Styles */
+.custom-airplane-cursor {
+  position: fixed;
+  top: -17px;
+  left: -17px;
+  width: 34px;
+  height: 34px;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.08s ease-out;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.85));
+}
+
+/* Airplane Jet Engine Smoke Contrail & Idle Puff Animations */
+@keyframes smoke-expand {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.6) translate(0, 0);
+  }
+  50% {
+    opacity: 0.35;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(3.5) translate(var(--dx, 0), var(--dy, 12px));
+  }
+}
+
+.smoke-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  overflow: hidden;
+}
+
+.smoke-particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(226, 232, 240, 0.45) 0%, rgba(199, 125, 255, 0.18) 60%, transparent 100%);
+  filter: blur(4px);
+  animation: smoke-expand 1.2s ease-out forwards;
+}
+
+.smoke-particle--idle {
+  animation-duration: 1.8s;
+  background: radial-gradient(circle, rgba(200, 210, 230, 0.25) 0%, rgba(76, 201, 240, 0.12) 60%, transparent 100%);
+}
+
+/* Floating Background Effects */
+.floating-background-wrap {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.floating-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: float-orb infinite ease-in-out;
+}
+
+.floating-node {
+  position: absolute;
+  color: var(--lilac);
+  opacity: 0.35;
+  animation: float-subtle infinite ease-in-out;
+}
+
+/* WorldEmp Inspired 3D Flip Box Poster Animation */
+.flip-box {
+  perspective: 1200px;
+  background-color: transparent;
+  width: 100%;
+  height: 380px;
+}
+
+.flip-box-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  transition: transform 1.25s cubic-bezier(0.25, 1, 0.3, 1), box-shadow 0.8s ease, border-color 0.8s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--night-border);
+  background: var(--night-card);
+}
+
+.flip-box:hover .flip-box-inner {
+  transform: rotateY(180deg);
+  border-color: var(--lilac);
+  box-shadow: 0 16px 40px rgba(123, 44, 191, 0.4);
+}
+
+.flip-box-front,
+.flip-box-back-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.flip-box-front {
+  background: #080710;
+  display: flex;
+  flex-direction: column;
+}
+
+.flip-box-front-image-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #050408;
+  padding: .75rem;
+}
+
+.flip-box-front-image-wrap img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  display: block;
+}
+
+.flip-box-front-footer {
+  position: absolute;
+  bottom: 0;
+  inset-x: 0;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(180deg, transparent 0%, rgba(5, 4, 8, 0.95) 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.flip-box-front-footer h4 {
+  margin: 0;
+  font-family: Georgia, serif;
+  font-size: 1.15rem;
+  color: var(--text-primary);
+}
+
+.flip-box-back-overlay {
+  background: linear-gradient(135deg, rgba(13, 11, 22, 0.98) 0%, rgba(32, 20, 52, 0.98) 100%);
+  transform: rotateY(180deg);
+  padding: 2.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid var(--lilac);
+  box-shadow: inset 0 0 25px rgba(199, 125, 255, 0.25);
+}
+
+.flip-box-inner .description {
+  color: var(--text-secondary);
+  font-size: .95rem;
+  line-height: 1.6;
+  margin: .75rem 0 1.25rem;
+}
+
+.elementor-button-wrapper.litho-button-wrapper {
+  margin-top: auto;
+}
+
+/* Minimalistic Hero Profile Avatar & Single Sleek Orbit Ring */
+.hero-profile-container {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.orbit-ring--minimal {
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  border: 1px dashed rgba(199, 125, 255, 0.45);
+  animation: rotate-clockwise 30s linear infinite;
+  pointer-events: none;
+}
+
+.hero-profile-avatar {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--lilac);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(199, 125, 255, 0.25);
+  z-index: 2;
+  background: var(--night-surface);
+}
+
+.hero-profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-profile-badge {
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--night-surface);
+  border: 1px solid var(--night-border-glow);
+  padding: .35rem 1rem;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: .12em;
+  white-space: nowrap;
+}
+
+/* Shimmering Loading Skeleton Styles */
+@keyframes skeleton-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-box {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04) 25%, rgba(199, 125, 255, 0.16) 50%, rgba(255, 255, 255, 0.04) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.6s infinite ease-in-out;
+  border-radius: var(--radius-sm);
+  display: block;
+}
+
+.skeleton-card {
+  padding: 2.25rem;
+  background: var(--night-card);
+  border: 1px solid var(--night-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.skeleton-poster {
+  height: 380px;
+  background: var(--night-card);
+  border: 1px solid var(--night-border);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.skeleton-row {
+  padding: 1.85rem 2.25rem;
+  background: var(--night-card);
+  border: 1px solid var(--night-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+
+@keyframes intro-progress {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+

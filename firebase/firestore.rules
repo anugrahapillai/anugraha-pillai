@@ -1,0 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function adminRecord() { return get(/databases/$(database)/documents/admins/$(request.auth.uid)); }
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.admin == true
+        && request.auth.token.email_verified == true
+        && adminRecord().data.active == true;
+    }
+    function draftKeys() {
+      return ['title', 'slug', 'excerpt', 'body', 'category', 'tags', 'coverAlt',
+        'seoTitle', 'seoDescription', 'media', 'status', 'createdAt', 'createdBy',
+        'updatedAt', 'updatedBy'];
+    }
+    function validDraft() {
+      return request.resource.data.keys().hasOnly(draftKeys())
+        && request.resource.data.title is string && request.resource.data.title.size() >= 3
+        && request.resource.data.title.size() <= 160
+        && request.resource.data.slug is string && request.resource.data.slug.matches('^[a-z0-9]+(-[a-z0-9]+)*$')
+        && request.resource.data.status == 'draft'
+        && request.resource.data.tags is list && request.resource.data.tags.size() <= 12
+        && request.resource.data.updatedBy == request.auth.uid
+        && request.resource.data.updatedAt == request.time;
+    }
+    function draftUpdate() {
+      return validDraft()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'title', 'excerpt', 'body', 'category', 'tags', 'coverAlt', 'seoTitle',
+          'seoDescription', 'media', 'updatedAt', 'updatedBy'
+        ]);
+    }
+
+    match /admins/{uid} { allow read: if isAdmin() && request.auth.uid == uid; allow write: if false; }
+    match /{collection}/{id} {
+      allow read: if isAdmin() && collection in ['posts', 'posters', 'research', 'services', 'pages'];
+      allow create: if isAdmin() && collection in ['posts', 'posters', 'research', 'services', 'pages'] && validDraft()
+        && request.resource.data.createdBy == request.auth.uid && request.resource.data.createdAt == request.time;
+      allow update: if isAdmin() && collection in ['posts', 'posters', 'research', 'services', 'pages'] && draftUpdate();
+      allow delete: if false;
+    }
+    match /settings/{id} { allow read: if isAdmin(); allow write: if false; }
+    match /slugReservations/{id} { allow read, write: if false; }
+    match /publicationJobs/{id} { allow read: if isAdmin(); allow write: if false; }
+    match /redirects/{id} { allow read, write: if false; }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

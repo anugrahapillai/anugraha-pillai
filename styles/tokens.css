@@ -1,0 +1,42 @@
+:root {
+  /* Dark Mode Palette */
+  --night-bg: #07060b;
+  --night-surface: #100e19;
+  --night-card: #151221;
+  --night-card-hover: #1c182b;
+  --night-border: rgba(255, 255, 255, 0.08);
+  --night-border-glow: rgba(199, 125, 255, 0.35);
+
+  /* Brand Accents & Gradients */
+  --violet: #7b2cbf;
+  --lilac: #c77dff;
+  --cyan-glow: #4cc9f0;
+  --blue-glow: #3a86ff;
+  --accent-gradient: linear-gradient(135deg, #7b2cbf 0%, #c77dff 50%, #4cc9f0 100%);
+  --hero-glow: radial-gradient(circle at 50% 30%, rgba(123, 44, 191, 0.18) 0%, rgba(7, 6, 11, 0) 70%);
+
+  /* Typography Families */
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Text & Utility */
+  --text-primary: #f8f9fa;
+  --text-secondary: #a7a2c7;
+  --text-muted: #767292;
+  --text-glow: #e0aaff;
+
+  /* UI Tokens */
+  --background: var(--night-bg);
+  --foreground: var(--text-primary);
+  --accent: var(--lilac);
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.85rem;
+  --radius-lg: 1.25rem;
+
+  --shadow-glow: 0 12px 35px rgba(123, 44, 191, 0.28);
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --glass-bg: rgba(16, 14, 25, 0.82);
+  --glass-border: rgba(255, 255, 255, 0.12);
+}

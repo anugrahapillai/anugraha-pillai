@@ -1,0 +1,14 @@
+{
+  "indexes": [
+    { "collectionGroup": "posts", "queryScope": "COLLECTION", "fields": [
+      { "fieldPath": "status", "order": "ASCENDING" }, { "fieldPath": "updatedAt", "order": "DESCENDING" }
+    ] },
+    { "collectionGroup": "posts", "queryScope": "COLLECTION", "fields": [
+      { "fieldPath": "category", "order": "ASCENDING" }, { "fieldPath": "updatedAt", "order": "DESCENDING" }
+    ] },
+    { "collectionGroup": "publicationJobs", "queryScope": "COLLECTION", "fields": [
+      { "fieldPath": "state", "order": "ASCENDING" }, { "fieldPath": "nextAttemptAt", "order": "ASCENDING" }
+    ] }
+  ],
+  "fieldOverrides": []
+}

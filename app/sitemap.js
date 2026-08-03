@@ -1,0 +1,1 @@
+export default function sitemap() { return ["", "/about", "/services", "/contact", "/blogs", "/posters", "/research"].map((path) => ({ url: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}${path}` })); }
