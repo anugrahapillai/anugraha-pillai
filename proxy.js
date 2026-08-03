@@ -4,6 +4,11 @@ import { PHASE_ONE_COOKIE, verifyPhaseOneSession } from "@/lib/server/phase-one-
 export async function proxy(request) {
   const pathname = request.nextUrl.pathname;
 
+  // Allow public content listing GET API requests
+  if (pathname === "/api/admin/content" && request.method === "GET") {
+    return NextResponse.next();
+  }
+
   // Allow login page access without session check
   if (pathname === "/admin/login") {
     return NextResponse.next();
