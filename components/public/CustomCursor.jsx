@@ -108,17 +108,30 @@ export default function CustomCursor() {
     return () => clearInterval(interval);
   }, [enabled, rotation, createSmokePuff]);
 
+  // Inject global style sheet directly to document.head to guarantee hiding default cursor on desktop
+  useEffect(() => {
+    if (!enabled) return;
+
+    const styleEl = document.createElement("style");
+    styleEl.id = "custom-cursor-hide-rules";
+    styleEl.innerHTML = `
+      * {
+        cursor: none !important;
+      }
+    `;
+    document.head.appendChild(styleEl);
+
+    return () => {
+      styleEl.remove();
+    };
+  }, [enabled]);
+
   if (isAdminRoute || !enabled) {
     return null;
   }
 
   return (
     <>
-      <style dangerouslySetInnerHTML={{ __html: `
-        * {
-          cursor: none !important;
-        }
-      `}} />
       <div ref={smokeContainerRef} className="smoke-layer" />
       <div
         ref={cursorRef}

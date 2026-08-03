@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "node scripts/prepare-build.js",
+    "prebuild": "node scripts/prepare-build.js",
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
