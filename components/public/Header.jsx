@@ -52,7 +52,7 @@ export default function Header() {
           />
           <span className="site-logo__text">
             <strong>Anugraha</strong>
-            <small>Aeronautical Engineer & Researcher</small>
+            <small>Aeronautical Engineer</small>
           </span>
         </Link>
 
