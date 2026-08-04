@@ -7,6 +7,9 @@ import ContentEditor from "@/components/admin/ContentEditor";
 import StatusBadge from "@/components/admin/StatusBadge";
 import { displayState } from "@/lib/repositories/mock-admin";
 
+const contentCache = {};
+const CACHE_TTL = 120000; // 2 minutes cache TTL
+
 export default function ContentManager({ type, title = `${type}s`, description }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,12 +20,25 @@ export default function ContentManager({ type, title = `${type}s`, description }
   const [target, setTarget] = useState(null);
   const [notice, setNotice] = useState("");
 
-  const loadData = useCallback(async () => {
+  const loadData = useCallback(async (force = false) => {
+    const now = Date.now();
+    if (!force && contentCache[type] && (now - contentCache[type].timestamp < CACHE_TTL)) {
+      setItems(contentCache[type].items);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await fetch(`/api/admin/content?type=${encodeURIComponent(type)}`);
       const data = await res.json();
-      setItems(data.items || []);
+      const loadedItems = data.items || [];
+      
+      contentCache[type] = {
+        items: loadedItems,
+        timestamp: now,
+      };
+      setItems(loadedItems);
     } catch {
       setNotice("Failed to load content from server.");
     } finally {
@@ -33,7 +49,7 @@ export default function ContentManager({ type, title = `${type}s`, description }
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const frame = window.requestAnimationFrame(() => {
-      loadData();
+      loadData(false);
       setQuery(params.get("q") || "");
       setState(params.get("state") || "");
       if (params.get("new") === "true" || params.get("section")) setEditor({});
@@ -65,7 +81,8 @@ export default function ContentManager({ type, title = `${type}s`, description }
         item={editor.id ? editor : undefined}
         onClose={() => {
           setEditor(null);
-          loadData();
+          delete contentCache[type];
+          loadData(true);
           window.history.replaceState(null, "", window.location.pathname);
         }}
       />
@@ -80,7 +97,8 @@ export default function ContentManager({ type, title = `${type}s`, description }
       });
       if (res.ok) {
         setNotice("Record deleted!");
-        loadData();
+        delete contentCache[type];
+        loadData(true);
       } else {
         const data = await res.json();
         setNotice(data.error || "Failed to delete item.");
@@ -99,7 +117,10 @@ export default function ContentManager({ type, title = `${type}s`, description }
           <h1>{title}</h1>
           <p>{description || `Manage ${title.toLowerCase()} .`}</p>
         </div>
-        <Button onClick={() => setEditor({})}>New {type.toLowerCase()}</Button>
+        <div style={{ display: "flex", gap: "0.75rem" }}>
+          <Button variant="secondary" onClick={() => { delete contentCache[type]; loadData(true); }}>Refresh</Button>
+          <Button onClick={() => setEditor({})}>New {type.toLowerCase()}</Button>
+        </div>
       </header>
 
       {notice && <p className="form-message form-message--success" role="status">{notice}</p>}
