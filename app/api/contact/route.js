@@ -15,6 +15,13 @@ export async function POST(request) {
 
     const dispatchResult = await sendContactEmail(validated);
 
+    if (!dispatchResult.mailDelivered) {
+      return NextResponse.json(
+        { error: "Email delivery failed", details: dispatchResult.deliveryError || "Check your EmailJS keys." },
+        { status: 502 }
+      );
+    }
+
     return NextResponse.json({
       success: true,
       message: "Your message has been successfully received and saved.",
