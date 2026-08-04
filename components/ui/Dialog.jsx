@@ -15,6 +15,22 @@ export default function Dialog({ children, open, onClose, title = "Dialog" }) {
     }, 200);
   }, [onClose]);
 
+  // Effect 1: Handle scroll lock. Restricts re-runs to only open/close transitions.
+  useEffect(() => {
+    if (!open) return;
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = originalBodyOverflow;
+      document.documentElement.style.overflow = originalHtmlOverflow;
+    };
+  }, [open]);
+
+  // Effect 2: Handle focus management and keyboard trapping.
   useEffect(() => {
     if (!open || closing) return;
     const previous = document.activeElement;
@@ -27,12 +43,7 @@ export default function Dialog({ children, open, onClose, title = "Dialog" }) {
       ),
     ];
 
-    const originalBodyOverflow = document.body.style.overflow;
-    const originalHtmlOverflow = document.documentElement.style.overflow;
-
     focusable()[0]?.focus();
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
 
     const keyboard = (event) => {
       if (event.key === "Escape") handleClose();
@@ -54,8 +65,6 @@ export default function Dialog({ children, open, onClose, title = "Dialog" }) {
     document.addEventListener("keydown", keyboard);
     return () => {
       document.removeEventListener("keydown", keyboard);
-      document.body.style.overflow = originalBodyOverflow;
-      document.documentElement.style.overflow = originalHtmlOverflow;
       previous?.focus();
     };
   }, [open, closing, handleClose]);
