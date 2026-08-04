@@ -36,8 +36,13 @@ export default function ContactForm({ initialSubject = "", onSubjectChange }) {
 
     const trimmedName = formData.name.trim();
     const trimmedEmail = formData.email.trim();
+    const trimmedMessage = formData.message.trim();
 
-    // Validate Name: no numbers, no emojis
+    // Validate Name: min length, no numbers, no emojis
+    if (trimmedName.length < 2) {
+      setStatus({ state: "error", message: "Name must be at least 2 characters." });
+      return;
+    }
     if (/\d/.test(trimmedName)) {
       setStatus({ state: "error", message: "Name cannot contain numbers." });
       return;
@@ -73,6 +78,12 @@ export default function ContactForm({ initialSubject = "", onSubjectChange }) {
       }
     }
 
+    // Validate Message: min length
+    if (trimmedMessage.length < 5) {
+      setStatus({ state: "error", message: "Message must be at least 5 characters." });
+      return;
+    }
+
     setStatus({ state: "submitting", message: "Delivering your message…" });
 
     try {
@@ -94,8 +105,16 @@ export default function ContactForm({ initialSubject = "", onSubjectChange }) {
           onSubjectChange("");
         }
       } else {
-        const errDetail = data.error || data.details || "Unable to deliver message right now. Please try again.";
-        setStatus({ state: "error", message: typeof errDetail === "string" ? errDetail : "Form submission error." });
+        // Extract Zod detailed messages if available
+        let errDetail = "Form submission error.";
+        if (data.details && Array.isArray(data.details) && data.details.length > 0) {
+          errDetail = data.details[0].message;
+        } else if (typeof data.error === "string") {
+          errDetail = data.error;
+        } else if (typeof data.details === "string") {
+          errDetail = data.details;
+        }
+        setStatus({ state: "error", message: errDetail });
       }
     } catch (err) {
       console.error("Contact submit error:", err);

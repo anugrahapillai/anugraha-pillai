@@ -308,7 +308,7 @@ export default function ContentEditor({ type = "Blog", item, onClose }) {
         </section>
 
         {/* Section 2: Media & Image Assets */}
-        {type !== "Service" && (
+        {type !== "Service" && type !== "Research" && (
           <section className="panel">
             <h2 style={{ fontSize: "1.25rem", fontFamily: "var(--font-serif)", marginBottom: "1.25rem", borderBottom: "1px solid var(--night-border)", paddingBottom: ".75rem" }}>
               ✦ Media & Image Assets
