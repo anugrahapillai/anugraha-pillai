@@ -13,7 +13,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const post = mockContent.find((i) => i.slug === slug || i.id === slug);
-  if (!post) return { title: "Dispatch Not Found — Anugraha Pillai" };
+  if (!post) return { title: "Aero Outlook Not Found — Anugraha Pillai" };
   return {
     title: `${post.title} — Anugraha Pillai`,
     description: post.excerpt || post.title,
@@ -31,8 +31,8 @@ export default async function BlogDetailPage({ params }) {
   return (
     <article className="article-detail">
       <header className="article-detail__header">
-        <Link href="/blogs" className="back-link">← All Dispatches</Link>
-        <span className="eyebrow">{post.category || "Dispatch"}</span>
+        <Link href="/blogs" className="back-link">← All Aero Outlook</Link>
+        <span className="eyebrow">{post.category || "Aero Outlook"}</span>
         <h1>{post.title}</h1>
         <div className="article-detail__meta">
           <time>Published {formatDate(post.publishedAt)}</time> · <span></span>
@@ -49,7 +49,7 @@ export default async function BlogDetailPage({ params }) {
       />
 
       <footer className="article-detail__footer">
-        <Link href="/blogs" className="button button--secondary">← Return to Writing</Link>
+        <Link href="/blogs" className="button button--secondary">← Return to Aero Outlook</Link>
         <Link href="/contact" className="button button--primary">Discuss this dispatch</Link>
       </footer>
     </article>

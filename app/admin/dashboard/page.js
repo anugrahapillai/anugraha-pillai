@@ -21,9 +21,9 @@ export default async function DashboardPage() {
     ]);
 
     const allItems = [
-      ...(postsRes.items || []).map((i) => ({ ...i, type: "Blog" })),
-      ...(postersRes.items || []).map((i) => ({ ...i, type: "Poster" })),
-      ...(researchRes.items || []).map((i) => ({ ...i, type: "Research" })),
+      ...(postsRes.items || []).map((i) => ({ ...i, type: "Aero Outlook" })),
+      ...(postersRes.items || []).map((i) => ({ ...i, type: "Aero Graphics" })),
+      ...(researchRes.items || []).map((i) => ({ ...i, type: "Research & Analysis" })),
       ...(servicesRes.items || []).map((i) => ({ ...i, type: "Service" })),
     ];
 
@@ -40,9 +40,9 @@ export default async function DashboardPage() {
   }
 
   const actions = [
-    ["New Poster", "/admin/posters?new=true"],
-    ["New Dispatch", "/admin/blogs?new=true"],
-    ["New Service", "/admin/services?new=true"],
+    ["New Aero Graphics", "/admin/posters?new=true"],
+    ["New Aero Outlook", "/admin/blogs?new=true"],
+    ["New Research & Analysis", "/admin/research?new=true"],
     ["Edit Profile", "/admin/settings"],
   ];
 

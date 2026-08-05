@@ -8,8 +8,8 @@ import { phaseOneAuth, phaseOneAuthNotice } from "@/lib/client/auth-client";
 import FirebaseStorageWidget from "@/components/admin/FirebaseStorageWidget";
 
 const navigation = [
-  ["Dashboard", "/admin/dashboard"], ["Blogs", "/admin/blogs"],
-  ["Posters", "/admin/posters"], ["Research", "/admin/research"],
+  ["Dashboard", "/admin/dashboard"], ["Aero Outlook", "/admin/blogs"],
+  ["Aero Graphics", "/admin/posters"], ["Research & Analysis", "/admin/research"],
   ["Services", "/admin/services"], ["Edit Profile", "/admin/settings"],
 ];
 

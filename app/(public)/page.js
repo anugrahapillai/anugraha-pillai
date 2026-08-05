@@ -7,6 +7,9 @@ import ResearchRow from "@/components/public/ResearchRow";
 import ContactForm from "@/components/public/ContactForm";
 import CustomCursor from "@/components/public/CustomCursor";
 import FloatingBackground from "@/components/public/FloatingBackground";
+import Dialog from "@/components/ui/Dialog";
+import { formatDate } from "@/lib/client/date-utils";
+import { markdownToHtml } from "@/lib/client/markdown";
 
 const defaultArticles = [];
 const defaultPosters = [];
@@ -41,6 +44,10 @@ export default function SinglePageHome() {
 
   // Selected subject from service CTA clicks
   const [chosenSubject, setChosenSubject] = useState("");
+
+  // Modal control for Aero Outlook index listing
+  const [outlookModalOpen, setOutlookModalOpen] = useState(false);
+  const [selectedArticle, setSelectedArticle] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -174,47 +181,19 @@ export default function SinglePageHome() {
               </div>
             </div>
 
-            {/* Subsection 2: Previous Dispatches (Items 3 onwards with Lazy Load View More) */}
+            {/* View More Button triggering the Aero Outlook Index Modal */}
             {blogs.length > 3 && (
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: ".75rem", marginBottom: "1.25rem" }}>
-                  <span style={{ fontSize: ".8rem", fontFamily: "var(--font-mono)", fontWeight: 700, color: "var(--text-muted)", letterSpacing: ".12em", textTransform: "uppercase" }}>
-                    ◈ PREVIOUS DISPATCHES 
-                  </span>
-                  <div style={{ flex: 1, height: "1px", background: "var(--night-border)" }} />
-                </div>
-                <div className="grid-articles">
-                  {blogs.slice(3, visibleBlogsCount).map((post) => (
-                    <ArticleCard key={post.id} {...post} />
-                  ))}
-                  {loadingMoreBlogs &&
-                    Array.from({ length: 3 }).map((_, idx) => (
-                      <div key={`skel-blog-${idx}`} className="skeleton-card">
-                        <span className="skeleton-box" style={{ width: "40%", height: "1rem" }}></span>
-                        <span className="skeleton-box" style={{ width: "80%", height: "1.75rem", margin: ".5rem 0" }}></span>
-                        <span className="skeleton-box" style={{ width: "100%", height: "3rem" }}></span>
-                      </div>
-                    ))}
-                </div>
-
-                {/* View More Lazy Loading Button */}
-                {blogs.length > visibleBlogsCount && (
-                  <div style={{ textAlign: "center", marginTop: "2.5rem" }}>
-                    <button
-                      className="button button--secondary"
-                      onClick={() => {
-                        setLoadingMoreBlogs(true);
-                        setTimeout(() => {
-                          setVisibleBlogsCount((prev) => prev + 3);
-                          setLoadingMoreBlogs(false);
-                        }, 400);
-                      }}
-                      disabled={loadingMoreBlogs}
-                    >
-                      {loadingMoreBlogs ? "Loading More Dispatches…" : "View More Dispatches ↓"}
-                    </button>
-                  </div>
-                )}
+              <div style={{ textAlign: "center", marginTop: "1rem" }}>
+                <button
+                  type="button"
+                  className="button button--secondary"
+                  onClick={() => {
+                    setOutlookModalOpen(true);
+                    setSelectedArticle(null);
+                  }}
+                >
+                  View More Dispatches ↓
+                </button>
               </div>
             )}
           </div>
@@ -404,38 +383,59 @@ export default function SinglePageHome() {
         <div className="section-header">
           <h2 className="section-heading">The Engineer</h2>
         </div>
-        <div className="about-bio" style={{ maxWidth: "100%" }}>
-          {loading ? (
-            <div style={{ display: "grid", gap: ".75rem" }}>
-              <span className="skeleton-box" style={{ width: "100%", height: "1.2rem" }}></span>
-              <span className="skeleton-box" style={{ width: "95%", height: "1.2rem" }}></span>
-              <span className="skeleton-box" style={{ width: "85%", height: "1.2rem" }}></span>
+        
+        {loading ? (
+          <div style={{ display: "grid", gap: ".75rem" }}>
+            <span className="skeleton-box" style={{ width: "100%", height: "1.2rem" }}></span>
+            <span className="skeleton-box" style={{ width: "95%", height: "1.2rem" }}></span>
+            <span className="skeleton-box" style={{ width: "85%", height: "1.2rem" }}></span>
+          </div>
+        ) : (
+          <div style={{ display: "flex", gap: "2.5rem", flexDirection: "row", flexWrap: "wrap", alignItems: "flex-start", width: "100%" }}>
+            <div className="about-bio" style={{ flex: "1 1 500px", display: "grid", gap: "1.1rem" }}>
+              {(() => {
+                const text = currentProfile.aboutBio || "";
+                let paragraphs = [];
+                if (text.includes("\n")) {
+                  paragraphs = text.split(/\n+/).map(p => p.trim()).filter(Boolean);
+                } else {
+                  const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+                  let currentPara = [];
+                  sentences.forEach((sentence, index) => {
+                    currentPara.push(sentence.trim());
+                    if (currentPara.length === 2 || index === sentences.length - 1) {
+                      paragraphs.push(currentPara.join(" "));
+                      currentPara = [];
+                    }
+                  });
+                }
+                return paragraphs.map((para, i) => (
+                  <p key={i} style={{ margin: 0, lineHeight: "1.65" }}>
+                    {para}
+                  </p>
+                ));
+              })()}
             </div>
-          ) : (
-            (() => {
-              const text = currentProfile.aboutBio || "";
-              let paragraphs = [];
-              if (text.includes("\n")) {
-                paragraphs = text.split(/\n+/).map(p => p.trim()).filter(Boolean);
-              } else {
-                const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
-                let currentPara = [];
-                sentences.forEach((sentence, index) => {
-                  currentPara.push(sentence.trim());
-                  if (currentPara.length === 2 || index === sentences.length - 1) {
-                    paragraphs.push(currentPara.join(" "));
-                    currentPara = [];
-                  }
-                });
-              }
-              return paragraphs.map((para, i) => (
-                <p key={i} style={{ margin: 0 }}>
-                  {para}
-                </p>
-              ));
-            })()
-          )}
-        </div>
+            
+            {currentProfile.profilePicSecondary && (
+              <div style={{ flex: "0 0 320px", maxWidth: "100%", margin: "0 auto" }}>
+                <img
+                  src={currentProfile.profilePicSecondary}
+                  alt="Anugraha Pillai - Aeronautical Engineer"
+                  style={{
+                    width: "100%",
+                    height: "400px",
+                    borderRadius: "var(--radius-lg)",
+                    border: "3px solid var(--lilac)",
+                    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(199, 125, 255, 0.35)",
+                    objectFit: "cover",
+                    display: "block",
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        )}
       </section>
 
       {/* Contact Section: Get in Touch */}
@@ -447,6 +447,111 @@ export default function SinglePageHome() {
           <ContactForm initialSubject={chosenSubject} onSubjectChange={setChosenSubject} />
         </div>
       </section>
+      <Dialog
+        open={outlookModalOpen}
+        onClose={() => setOutlookModalOpen(false)}
+        title={selectedArticle ? selectedArticle.title : "Aero Outlook Index"}
+      >
+        {selectedArticle ? (
+          /* Full Article View inside popup */
+          <div className="article-detail" style={{ border: "none", padding: 0, background: "transparent", margin: 0, boxShadow: "none" }}>
+            {/* Sticky docked header matching dialog margins */}
+            <div style={{
+              position: "sticky",
+              top: "-1.75rem",
+              zIndex: 5,
+              background: "var(--night-card)",
+              backdropFilter: "blur(12px)",
+              margin: "-1.75rem -1.75rem 1.5rem",
+              padding: "1.25rem 1.75rem",
+              borderBottom: "1px solid var(--night-border)",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center"
+            }}>
+              <button
+                type="button"
+                className="button button--secondary"
+                onClick={() => setSelectedArticle(null)}
+                style={{ display: "inline-flex", alignItems: "center", gap: ".5rem", padding: ".4rem .85rem", fontSize: ".85rem" }}
+              >
+                ← Back to Index
+              </button>
+              <div style={{ display: "flex", gap: "1rem", fontSize: ".82rem", fontFamily: "var(--font-mono)", color: "var(--text-muted)" }}>
+                <span style={{ color: "var(--lilac)", fontWeight: 700, textTransform: "uppercase" }}>
+                  {selectedArticle.category || "General"}
+                </span>
+                <span>{formatDate(selectedArticle.publishedAt)}</span>
+              </div>
+            </div>
+
+            {selectedArticle.excerpt && (
+              <p style={{ fontSize: "1.1rem", lineHeight: "1.65", color: "var(--text-primary)", marginBottom: "1.5rem", fontStyle: "italic" }}>
+                {selectedArticle.excerpt}
+              </p>
+            )}
+            <div
+              className="markdown-body"
+              style={{ lineHeight: "1.75", color: "var(--text-secondary)" }}
+              dangerouslySetInnerHTML={{
+                __html: markdownToHtml(selectedArticle.body || "No body content available."),
+              }}
+            />
+          </div>
+        ) : (
+          /* Index list view of ALL uploaded blogs inside popup */
+          <div style={{ display: "grid", gap: "1rem" }}>
+            <p style={{ color: "var(--text-secondary)", fontSize: ".92rem", margin: 0, borderBottom: "1px solid var(--night-border)", paddingBottom: ".5rem" }}>
+              Explore all dispatches, research notes, and policy reviews published on Aero Outlook.
+            </p>
+            <div style={{ display: "grid", gap: "0.75rem", maxHeight: "60vh", overflowY: "auto", paddingRight: ".5rem" }}>
+              {blogs.map((item) => (
+                <div
+                  key={item.id}
+                  style={{
+                    padding: "0.85rem 1rem",
+                    background: "var(--night-surface)",
+                    border: "1px solid var(--night-border)",
+                    borderRadius: "var(--radius-md)",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: "1.5rem",
+                  }}
+                >
+                  <div style={{ display: "grid", gap: "0.55rem", flex: 1 }}>
+                    <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", fontSize: "0.7rem", fontFamily: "var(--font-mono)", color: "var(--text-muted)" }}>
+                      <span style={{ fontWeight: 700, color: "var(--lilac)", textTransform: "uppercase", letterSpacing: ".05em" }}>
+                        {item.category || "General"}
+                      </span>
+                      <span>•</span>
+                      <span>{formatDate(item.publishedAt)}</span>
+                    </div>
+                    <h3 style={{ fontSize: "1.05rem", fontFamily: "var(--font-serif)", fontWeight: 700, margin: 0, color: "var(--text-primary)", lineHeight: "1.3" }}>
+                      {item.title}
+                    </h3>
+                    {item.excerpt && (
+                      <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", margin: 0, lineHeight: "1.4" }}>
+                        {item.excerpt}
+                      </p>
+                    )}
+                  </div>
+                  <div style={{ flexShrink: 0 }}>
+                    <button
+                      type="button"
+                      className="button button--secondary"
+                      onClick={() => setSelectedArticle(item)}
+                      style={{ padding: "0.35rem 0.75rem", fontSize: "0.8rem", whiteSpace: "nowrap" }}
+                    >
+                      Read →
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </Dialog>
     </div>
   );
 }

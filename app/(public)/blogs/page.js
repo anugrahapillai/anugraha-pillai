@@ -2,7 +2,7 @@ import ArticleCard from "@/components/public/ArticleCard";
 import { mockContent } from "@/lib/repositories/mock-admin";
 
 export const metadata = {
-  title: "Writing & Dispatches — Anugraha Pillai",
+  title: "Aero Outlook — Anugraha Pillai",
   description: "Essays, policy dispatches, and reflections on institutional communication and governance.",
 };
 
@@ -12,8 +12,8 @@ export default function BlogsListingPage() {
   return (
     <div className="page-container">
       <header className="page-header">
-        <p className="eyebrow">Writing</p>
-        <h1>Writing & Dispatches</h1>
+        <p className="eyebrow">Aero Outlook</p>
+        <h1>Aero Outlook</h1>
         <p>Essays, policy reflections, and observations on public systems.</p>
       </header>
 

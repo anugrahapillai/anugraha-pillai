@@ -10,6 +10,7 @@ export default function SettingsPage() {
     lead: "Exploring high-speed aerodynamics, sustainable propulsion, structural analysis, and autonomous flight stability through technical research and engineering design.",
     aboutBio: "Anugraha is an Aeronautical Engineer specializing in aerodynamics, flight dynamics, computational fluid dynamics (CFD), and advanced propulsion systems. Her research explores high-speed boundary layer behavior, sustainable aviation fuels, and structural integrity under high-stress flight regimes.",
     profilePic: "/assets/profile.jpg",
+    profilePicSecondary: "",
   });
 
   const [saving, setSaving] = useState(false);
@@ -92,52 +93,104 @@ export default function SettingsPage() {
       <section className="panel" style={{ maxWidth: "880px" }}>
         <form onSubmit={saveSettings} style={{ display: "grid", gap: "2rem" }}>
           
-          {/* Section A: Profile Picture & Media Uploader in Single Box */}
+          {/* Section A: Profile Pictures (Primary & Secondary) */}
           <div style={{ paddingBottom: "1.5rem", borderBottom: "1px solid var(--night-border)", display: "grid", gap: "1.5rem" }}>
             <h2 style={{ fontSize: "1.2rem", fontFamily: "var(--font-sans)", fontWeight: 700, margin: 0, color: "var(--lilac)" }}>
-              ✦ Profile Picture
+              ✦ Profile Pictures
             </h2>
 
-            <div style={{ display: "grid", gridTemplateColumns: "140px 1fr", gap: "1.75rem", alignItems: "center" }}>
-              {/* Profile Picture Avatar Preview */}
-              <div style={{ textAlign: "center" }}>
-                <div
-                  style={{
-                    width: "160px",
-                    height: "160px",
-                    borderRadius: "50%",
-                    overflow: "hidden",
-                    border: "3px solid var(--lilac)",
-                    boxShadow: "0 0 20px rgba(199, 125, 255, 0.4)",
-                    background: "var(--night-surface)",
-                    margin: "0 auto .5rem",
-                  }}
-                >
-                  <img
-                    src={profile.profilePic || "/assets/profile.jpg"}
-                    alt="Current Profile Preview"
-                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2.5rem" }}>
+              
+              {/* Left Column: Primary Profile Picture (Circle for Hero) */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                <h3 style={{ fontSize: "1rem", fontWeight: 650, margin: 0, color: "var(--text-primary)" }}>
+                  Primary (Hero Circle)
+                </h3>
+                <div style={{ display: "flex", gap: "1.25rem", alignItems: "center" }}>
+                  <div
+                    style={{
+                      width: "120px",
+                      height: "120px",
+                      borderRadius: "50%",
+                      overflow: "hidden",
+                      border: "3px solid var(--lilac)",
+                      boxShadow: "0 0 15px rgba(199, 125, 255, 0.4)",
+                      background: "var(--night-surface)",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <img
+                      src={profile.profilePic || "/assets/profile.jpg"}
+                      alt="Primary Preview"
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <MediaUploader
+                      onChange={(mediaResult) => {
+                        if (mediaResult?.dataUrl) {
+                          setProfile((current) => ({
+                            ...current,
+                            profilePic: mediaResult.dataUrl,
+                          }));
+                          setMessage("New primary profile picture uploaded! Click 'Save Profile Settings' to publish.");
+                        }
+                      }}
+                    />
+                    {/* Hidden input to maintain profilePic state */}
+                    <input type="hidden" name="profilePic" value={profile.profilePic || ""} />
+                  </div>
                 </div>
               </div>
 
-              {/* Upload Dropzone & Direct URL Input */}
-              <div style={{ display: "grid", gap: "1rem" }}>
-                <MediaUploader
-                  onChange={(mediaResult) => {
-                    if (mediaResult?.dataUrl) {
-                      setProfile((current) => ({
-                        ...current,
-                        profilePic: mediaResult.dataUrl,
-                      }));
-                      setMessage("New profile picture uploaded! Click 'Save Profile Settings' to publish.");
-                    }
-                  }}
-                />
-
-                {/* Hidden input to maintain profilePic state & background processing */}
-                <input type="hidden" name="profilePic" value={profile.profilePic || ""} />
+              {/* Right Column: Secondary Profile Picture (Rectangle for Bio) */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                <h3 style={{ fontSize: "1rem", fontWeight: 650, margin: 0, color: "var(--text-primary)" }}>
+                  Secondary (Bio Rectangle)
+                </h3>
+                <div style={{ display: "flex", gap: "1.25rem", alignItems: "center" }}>
+                  <div
+                    style={{
+                      width: "140px",
+                      height: "175px",
+                      borderRadius: "var(--radius-lg)",
+                      overflow: "hidden",
+                      border: "3px solid var(--lilac)",
+                      boxShadow: "0 0 15px rgba(199, 125, 255, 0.4)",
+                      background: "var(--night-surface)",
+                      flexShrink: 0,
+                    }}
+                  >
+                    {profile.profilePicSecondary ? (
+                      <img
+                        src={profile.profilePicSecondary}
+                        alt="Secondary Preview"
+                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                      />
+                    ) : (
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%", color: "var(--text-muted)", fontSize: ".8rem" }}>
+                        No Image
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <MediaUploader
+                      onChange={(mediaResult) => {
+                        if (mediaResult?.dataUrl) {
+                          setProfile((current) => ({
+                            ...current,
+                            profilePicSecondary: mediaResult.dataUrl,
+                          }));
+                          setMessage("New secondary profile picture uploaded! Click 'Save Profile Settings' to publish.");
+                        }
+                      }}
+                    />
+                    {/* Hidden input to maintain profilePicSecondary state */}
+                    <input type="hidden" name="profilePicSecondary" value={profile.profilePicSecondary || ""} />
+                  </div>
+                </div>
               </div>
+
             </div>
           </div>
 

@@ -13,7 +13,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const item = mockContent.find((i) => i.slug === slug || i.id === slug);
-  if (!item) return { title: "Research Not Found — Anugraha Pillai" };
+  if (!item) return { title: "Research & Analysis Not Found — Anugraha Pillai" };
   return {
     title: `${item.title} — Anugraha Pillai`,
     description: item.excerpt || item.title,
@@ -31,8 +31,8 @@ export default async function ResearchDetailPage({ params }) {
   return (
     <article className="article-detail">
       <header className="article-detail__header">
-        <Link href="/research" className="back-link">← All Research</Link>
-        <span className="eyebrow">{item.category || "Research Study"}</span>
+        <Link href="/research" className="back-link">← All Research & Analysis</Link>
+        <span className="eyebrow">{item.category || "Research & Analysis"}</span>
         <h1>{item.title}</h1>
         <div className="article-detail__meta">
           <time>Published {formatDate(item.publishedAt)}</time> · <span>Policy Study</span>
@@ -49,7 +49,7 @@ export default async function ResearchDetailPage({ params }) {
       />
 
       <footer className="article-detail__footer">
-        <Link href="/research" className="button button--secondary">← Return to Research Reports</Link>
+        <Link href="/research" className="button button--secondary">← Return to Research & Analysis</Link>
         <Link href="/contact" className="button button--primary">Enquire about this study</Link>
       </footer>
     </article>

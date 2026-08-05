@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const navAnchors = [
-  { href: "#writing", label: "Writing" },
-  { href: "#posters", label: "Posters" },
-  { href: "#research", label: "Research" },
+  { href: "#writing", label: "Aero Outlook" },
+  { href: "#posters", label: "Aero Graphics" },
+  { href: "#research", label: "Research & Analysis" },
   { href: "#services", label: "Services" },
   { href: "#about", label: "About" },
   { href: "#contact", label: "Contact" },

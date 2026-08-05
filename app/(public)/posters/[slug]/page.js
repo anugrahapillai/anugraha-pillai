@@ -11,7 +11,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const poster = mockContent.find((i) => i.slug === slug || i.id === slug);
-  if (!poster) return { title: "Poster Not Found — Anugraha Pillai" };
+  if (!poster) return { title: "Aero Graphics Not Found — Anugraha Pillai" };
   return {
     title: `${poster.title} — Anugraha Pillai`,
     description: poster.excerpt || poster.title,
@@ -29,8 +29,8 @@ export default async function PosterDetailPage({ params }) {
   return (
     <article className="poster-detail">
       <header className="page-header">
-        <Link href="/posters" className="back-link">← All Posters</Link>
-        <span className="eyebrow">{poster.category || "Poster"}</span>
+        <Link href="/posters" className="back-link">← All Aero Graphics</Link>
+        <span className="eyebrow">{poster.category || "Aero Graphics"}</span>
         <h1>{poster.title}</h1>
         <p>{poster.excerpt}</p>
       </header>
