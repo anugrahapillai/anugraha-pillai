@@ -18,8 +18,8 @@ export default function Footer() {
               src="/assets/logo.jpg"
               alt="Anugraha Logo"
               style={{
-                width: "52px",
-                height: "52px",
+                width: "57px",
+                height: "57px",
                 borderRadius: "50%",
                 objectFit: "cover",
                 border: "2px solid var(--lilac)",
@@ -128,7 +128,7 @@ export default function Footer() {
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", color: "var(--text-muted)", fontSize: ".88rem", fontFamily: "var(--font-mono)", flexWrap: "wrap", gap: "1rem" }}>
           <p style={{ margin: 0 }}>© 2026 Anugraha Pillai</p>
-          <p style={{ margin: 0 }}>Developed by Ratiraj</p>
+          <p style={{ margin: 0 }}>Developed by Ratiraj Chavan</p>
         </div>
       </div>
     </footer>

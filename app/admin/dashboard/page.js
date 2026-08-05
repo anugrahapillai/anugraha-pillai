@@ -1,58 +1,49 @@
 import Link from "next/link";
 import StatusBadge from "@/components/admin/StatusBadge";
-import { displayState, mockAdminRepository } from "@/lib/repositories/mock-admin";
+import { displayState } from "@/lib/repositories/mock-admin";
+import { formatDate } from "@/lib/client/date-utils";
+import {
+  firestorePosts,
+  firestorePosters,
+  firestoreResearch,
+  firestoreServices,
+} from "@/lib/repositories/firestore-adapters";
 
 export default async function DashboardPage() {
-  const { needsAction, recent } = await mockAdminRepository.dashboard();
+  let needsAction = [];
+
+  try {
+    const [postsRes, postersRes, researchRes, servicesRes] = await Promise.all([
+      firestorePosts.list({ limit: 50 }),
+      firestorePosters.list({ limit: 50 }),
+      firestoreResearch.list({ limit: 50 }),
+      firestoreServices.list({ limit: 50 }),
+    ]);
+
+    const allItems = [
+      ...(postsRes.items || []).map((i) => ({ ...i, type: "Blog" })),
+      ...(postersRes.items || []).map((i) => ({ ...i, type: "Poster" })),
+      ...(researchRes.items || []).map((i) => ({ ...i, type: "Research" })),
+      ...(servicesRes.items || []).map((i) => ({ ...i, type: "Service" })),
+    ];
+
+    needsAction = allItems
+      .filter((item) => ["draft", "pending", "failed"].includes(displayState(item)))
+      .sort((a, b) => {
+        const timeA = new Date(a.updatedAt || a.createdAt || 0).getTime();
+        const timeB = new Date(b.updatedAt || b.createdAt || 0).getTime();
+        return timeB - timeA;
+      })
+      .slice(0, 5);
+  } catch (err) {
+    console.error("Dashboard data fetch error:", err);
+  }
 
   const actions = [
     ["New Poster", "/admin/posters?new=true"],
     ["New Dispatch", "/admin/blogs?new=true"],
     ["New Service", "/admin/services?new=true"],
-    ["Profile Settings", "/admin/settings"],
-  ];
-
-  const activityLogs = [
-    {
-      id: "act-1",
-      icon: "✦",
-      title: "Flow Poster Published Live",
-      description: "Hypersonic Boundary Layer CFD Poster was published live to the public site.",
-      time: "10 minutes ago",
-      badge: "Live",
-    },
-    {
-      id: "act-2",
-      icon: "◈",
-      title: "Aerospace Dispatch Saved",
-      description: "Aerodynamic Optimization for Supersonic Airframes saved to Cloud Firestore.",
-      time: "1 hour ago",
-      badge: "Saved",
-    },
-    {
-      id: "act-3",
-      icon: "❖",
-      title: "Admin Sign-In Verified",
-      description: "Authorized login verified for anugrahapillai@gmail.com / ratirajchavan@gmail.com.",
-      time: "2 hours ago",
-      badge: "Security",
-    },
-    {
-      id: "act-4",
-      icon: "✉",
-      title: "Contact Form Message Received",
-      description: "Direct message received regarding CFD Advisory & Aerodynamic Analysis.",
-      time: "Yesterday at 4:15 PM",
-      badge: "Inquiry",
-    },
-    {
-      id: "act-5",
-      icon: "✧",
-      title: "Aeroplane Cursor & Custom Theme Active",
-      description: "White Aeroplane custom pointer and tail exhaust particles active on public site.",
-      time: "Yesterday at 2:00 PM",
-      badge: "Active",
-    },
+    ["Edit Profile", "/admin/settings"],
   ];
 
   return (
@@ -65,43 +56,35 @@ export default async function DashboardPage() {
         </div>
       </header>
 
-      <section aria-labelledby="quick-actions" style={{ marginBottom: "2rem" }}>
-        <h2 id="quick-actions" style={{ fontSize: "1.1rem", marginBottom: "1rem" }}>Quick Actions</h2>
-        <div className="quick-actions">
-          {actions.map(([label, href]) => (
-            <Link key={href} href={href}>
-              {label} <span aria-hidden="true">→</span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
       <div className="dashboard-grid">
-        {/* Recent Activity Log (Non-Tech Friendly) */}
-        <section className="panel" aria-labelledby="activity-log">
+        {/* Left Side: Quick Actions Panel */}
+        <section aria-labelledby="quick-actions" className="panel">
           <div className="panel__heading">
-            <h2 id="activity-log">Recent Activity Log</h2>
-            <span className="eyebrow eyebrow--light" style={{ fontSize: ".7rem" }}>Live Site History</span>
+            <h2 id="quick-actions">Quick Actions</h2>
+            <span className="eyebrow eyebrow--light" style={{ fontSize: ".7rem" }}>Studio Shortcuts</span>
           </div>
-          <ul className="content-rows" style={{ listStyle: "none", padding: 0, margin: 0 }}>
-            {activityLogs.map((log) => (
-              <li key={log.id} style={{ padding: ".85rem 0", borderBottom: "1px solid var(--night-border)", display: "flex", gap: "1rem", alignItems: "flex-start" }}>
-                <span style={{ fontSize: "1.4rem", lineHeight: 1 }}>{log.icon}</span>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: ".2rem" }}>
-                    <strong style={{ fontSize: "1rem", color: "var(--text-primary)" }}>{log.title}</strong>
-                    <small style={{ color: "var(--text-muted)", fontSize: ".78rem" }}>{log.time}</small>
-                  </div>
-                  <p style={{ margin: 0, fontSize: ".88rem", color: "var(--text-secondary)", lineHeight: 1.4 }}>
-                    {log.description}
-                  </p>
-                </div>
-              </li>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", marginTop: "1rem" }}>
+            {actions.map(([label, href]) => (
+              <Link
+                key={href}
+                href={href}
+                className="button button--secondary"
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  textAlign: "left",
+                  padding: "0.85rem 1.25rem",
+                  width: "100%",
+                }}
+              >
+                {label} <span aria-hidden="true">→</span>
+              </Link>
             ))}
-          </ul>
+          </div>
         </section>
 
-        {/* Content Needing Decision / Review */}
+        {/* Right Side: Items Needing Review Panel */}
         <section className="panel" aria-labelledby="needs-action">
           <div className="panel__heading">
             <h2 id="needs-action">Items Needing Review</h2>
@@ -122,7 +105,7 @@ function ContentRows({ items }) {
         <li key={item.id}>
           <div>
             <strong>{item.title}</strong>
-            <small>{item.type} · Updated {item.updatedAt}</small>
+            <small>{item.type} · Updated {formatDate(item.updatedAt)}</small>
           </div>
           <StatusBadge status={displayState(item)} />
         </li>

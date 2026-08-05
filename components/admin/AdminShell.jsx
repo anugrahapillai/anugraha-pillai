@@ -10,8 +10,7 @@ import FirebaseStorageWidget from "@/components/admin/FirebaseStorageWidget";
 const navigation = [
   ["Dashboard", "/admin/dashboard"], ["Blogs", "/admin/blogs"],
   ["Posters", "/admin/posters"], ["Research", "/admin/research"],
-  ["Services", "/admin/services"], ["Settings", "/admin/settings"],
-  ["Security", "/admin/security"],
+  ["Services", "/admin/services"], ["Edit Profile", "/admin/settings"],
 ];
 
 export default function AdminShell({ children }) {
@@ -45,7 +44,7 @@ export default function AdminShell({ children }) {
         <img
           src="/assets/logo.jpg"
           alt="Anugraha Logo"
-          style={{ width: "32px", height: "32px", borderRadius: "50%", objectFit: "cover", border: "1.5px solid var(--lilac)" }}
+          style={{ width: "35px", height: "35px", borderRadius: "50%", objectFit: "cover", border: "1.5px solid var(--lilac)" }}
         />
         <span>Anugraha<br /><small>Content studio</small></span>
       </div>

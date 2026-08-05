@@ -56,8 +56,8 @@ export default function LoginPage() {
           src="/assets/logo.jpg"
           alt="Anugraha Logo"
           style={{
-            width: "60px",
-            height: "60px",
+            width: "66px",
+            height: "66px",
             borderRadius: "50%",
             margin: "0 auto 1rem",
             objectFit: "cover",
@@ -66,7 +66,7 @@ export default function LoginPage() {
             display: "block",
           }}
         />
-        <p className="eyebrow">Content Studio Studio</p>
+        <p className="eyebrow">Content Studio</p>
         <h1 id="login-title" style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>
           {mode === "signin" ? "Admin Login" : "Reset Admin Password"}
         </h1>

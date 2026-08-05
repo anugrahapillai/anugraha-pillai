@@ -257,8 +257,8 @@
 /* Minimalistic Hero Profile Avatar & Single Sleek Orbit Ring */
 .hero-profile-container {
   position: relative;
-  width: 280px;
-  height: 280px;
+  width: 308px;
+  height: 308px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -276,8 +276,8 @@
 
 .hero-profile-avatar {
   position: relative;
-  width: 250px;
-  height: 250px;
+  width: 275px;
+  height: 275px;
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid var(--lilac);
