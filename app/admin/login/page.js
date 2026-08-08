@@ -56,8 +56,8 @@ export default function LoginPage() {
           src="/assets/logo.jpg"
           alt="Anugraha Logo"
           style={{
-            width: "66px",
-            height: "66px",
+            width: "63px",
+            height: "63px",
             borderRadius: "50%",
             margin: "0 auto 1rem",
             objectFit: "cover",

@@ -18,8 +18,8 @@ export default function Footer() {
               src="/assets/logo.jpg"
               alt="Anugraha Logo"
               style={{
-                width: "57px",
-                height: "57px",
+                width: "54px",
+                height: "54px",
                 borderRadius: "50%",
                 objectFit: "cover",
                 border: "2px solid var(--lilac)",
@@ -128,7 +128,7 @@ export default function Footer() {
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", color: "var(--text-muted)", fontSize: ".88rem", fontFamily: "var(--font-mono)", flexWrap: "wrap", gap: "1rem" }}>
           <p style={{ margin: 0 }}>© 2026 Anugraha Pillai</p>
-          <p style={{ margin: 0 }}>Developed by Ratiraj Chavan</p>
+          <p style={{ margin: 0 }}>Developed by <a href="https://ratirajchavan.vercel.app/" target="_blank" rel="noopener noreferrer" style={{ color: "var(--text-secondary)", textDecoration: "underline" }}>Ratiraj Chavan</a></p>
         </div>
       </div>
     </footer>

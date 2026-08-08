@@ -44,7 +44,7 @@ export default function AdminShell({ children }) {
         <img
           src="/assets/logo.jpg"
           alt="Anugraha Logo"
-          style={{ width: "35px", height: "35px", borderRadius: "50%", objectFit: "cover", border: "1.5px solid var(--lilac)" }}
+          style={{ width: "33px", height: "33px", borderRadius: "50%", objectFit: "cover", border: "1.5px solid var(--lilac)" }}
         />
         <span>Anugraha<br /><small>Content studio</small></span>
       </div>

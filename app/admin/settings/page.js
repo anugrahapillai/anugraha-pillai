@@ -11,6 +11,7 @@ export default function SettingsPage() {
     aboutBio: "Anugraha is an Aeronautical Engineer specializing in aerodynamics, flight dynamics, computational fluid dynamics (CFD), and advanced propulsion systems. Her research explores high-speed boundary layer behavior, sustainable aviation fuels, and structural integrity under high-stress flight regimes.",
     profilePic: "/assets/profile.jpg",
     profilePicSecondary: "",
+    contactPoster: "",
   });
 
   const [saving, setSaving] = useState(false);
@@ -192,6 +193,57 @@ export default function SettingsPage() {
               </div>
 
             </div>
+
+            <hr style={{ border: "none", borderTop: "1px dashed var(--night-border)", margin: "2rem 0 1.5rem" }} />
+
+            {/* Row 2: Contact Section Poster (Full width row) */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+              <h3 style={{ fontSize: "1rem", fontWeight: 650, margin: 0, color: "var(--text-primary)" }}>
+                Contact Poster (Rectangle for Contact Form Sidebox)
+              </h3>
+              <div style={{ display: "flex", gap: "1.75rem", alignItems: "center" }}>
+                <div
+                  style={{
+                    width: "140px",
+                    height: "175px",
+                    borderRadius: "var(--radius-lg)",
+                    overflow: "hidden",
+                    border: "3px solid var(--lilac)",
+                    boxShadow: "0 0 15px rgba(199, 125, 255, 0.4)",
+                    background: "var(--night-surface)",
+                    flexShrink: 0,
+                  }}
+                >
+                  {profile.contactPoster ? (
+                    <img
+                      src={profile.contactPoster}
+                      alt="Contact Poster Preview"
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    />
+                  ) : (
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%", color: "var(--text-muted)", fontSize: ".8rem" }}>
+                      No Image
+                    </div>
+                  )}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <MediaUploader
+                    onChange={(mediaResult) => {
+                      if (mediaResult?.dataUrl) {
+                        setProfile((current) => ({
+                          ...current,
+                          contactPoster: mediaResult.dataUrl,
+                        }));
+                        setMessage("New contact poster uploaded! Click 'Save Profile Settings' to publish.");
+                      }
+                    }}
+                  />
+                  {/* Hidden input to maintain contactPoster state */}
+                  <input type="hidden" name="contactPoster" value={profile.contactPoster || ""} />
+                </div>
+              </div>
+            </div>
+
           </div>
 
           {/* Section B: Profile Text Details */}

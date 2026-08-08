@@ -45,18 +45,6 @@ export default function IntroLoader() {
     >
       {/* Intro Brand Typography */}
       <div style={{ textAlign: "center", padding: "0 1.5rem" }}>
-        <p
-          className="eyebrow"
-          style={{
-            fontSize: ".85rem",
-            letterSpacing: ".22em",
-            marginBottom: ".65rem",
-            color: "var(--cyan-glow)",
-            animation: "pulse-glow 2s infinite",
-          }}
-        >
-          AEROSPACE ENGINEERING
-        </p>
         <h1
           className="gradient-text"
           style={{

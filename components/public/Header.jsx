@@ -42,8 +42,8 @@ export default function Header() {
             src="/assets/logo.jpg"
             alt="Anugraha Logo"
             style={{
-              width: "42px",
-              height: "42px",
+              width: "40px",
+              height: "40px",
               borderRadius: "50%",
               objectFit: "cover",
               border: "1.5px solid var(--lilac)",

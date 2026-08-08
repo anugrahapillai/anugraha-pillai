@@ -32,6 +32,17 @@ export async function GET(request) {
     const state = searchParams.get("state");
     const query = searchParams.get("q");
 
+    if (type === "all") {
+      const [posts, posters, research, services, settings] = await Promise.all([
+        firestorePosts.list({ state }),
+        firestorePosters.list({ state }),
+        firestoreResearch.list({ state }),
+        firestoreServices.list({ state }),
+        firestoreSettings.list(),
+      ]);
+      return NextResponse.json({ posts, posters, research, services, settings });
+    }
+
     const adapter = getAdapter(type);
     const result = await adapter.list({ state, queryStr: query });
     return NextResponse.json(result);

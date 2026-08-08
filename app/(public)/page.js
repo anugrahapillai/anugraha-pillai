@@ -50,22 +50,34 @@ export default function SinglePageHome() {
   const [selectedArticle, setSelectedArticle] = useState(null);
 
   useEffect(() => {
+    // 1. Try loading from localStorage first to eliminate initial screen flash / skeleton wait
+    try {
+      const cached = localStorage.getItem("anugraha_home_cache");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed.blogs) setBlogs(parsed.blogs);
+        if (parsed.posters) setPosters(parsed.posters);
+        if (parsed.research) setResearch(parsed.research);
+        if (parsed.services) setServices(parsed.services);
+        if (parsed.profile) setProfile(parsed.profile);
+        setLoading(false);
+      }
+    } catch (e) {
+      console.warn("Failed to load local storage cache", e);
+    }
+
+    // 2. Fetch fresh data from consolidated server API endpoint (1 request instead of 5)
     async function fetchData() {
       try {
-        const [bRes, pRes, rRes, sRes, stRes] = await Promise.all([
-          fetch("/api/admin/content?type=posts&state=published").then((r) => r.json()),
-          fetch("/api/admin/content?type=posters&state=published").then((r) => r.json()),
-          fetch("/api/admin/content?type=research&state=published").then((r) => r.json()),
-          fetch("/api/admin/content?type=services&state=published").then((r) => r.json()),
-          fetch("/api/admin/content?type=settings").then((r) => r.json()),
-        ]);
+        const res = await fetch("/api/admin/content?type=all&state=published");
+        const data = await res.json();
 
-        const publishedBlogs = (bRes.items || []).filter((i) => i.status === "published" || !i.status);
-        const publishedPosters = (pRes.items || []).filter((i) => i.status === "published" || !i.status);
-        const publishedResearch = (rRes.items || []).filter((i) => i.status === "published" || !i.status);
-        const publishedServices = (sRes.items || []).filter((i) => i.status === "published" || !i.status);
+        const publishedBlogs = (data.posts?.items || []).filter((i) => i.status === "published" || !i.status);
+        const publishedPosters = (data.posters?.items || []).filter((i) => i.status === "published" || !i.status);
+        const publishedResearch = (data.research?.items || []).filter((i) => i.status === "published" || !i.status);
+        const publishedServices = (data.services?.items || []).filter((i) => i.status === "published" || !i.status);
+        const settingsItems = data.settings?.items || [];
 
-        // Sort items so newest uploads always appear first in Recents
         const sortByNewest = (items) =>
           [...items].sort((a, b) => {
             const timeA = new Date(a.updatedAt || a.createdAt || a.publishedAt || 0).getTime();
@@ -73,17 +85,32 @@ export default function SinglePageHome() {
             return timeB - timeA;
           });
 
-        setBlogs(sortByNewest(publishedBlogs));
-        setPosters(sortByNewest(publishedPosters));
-        setResearch(sortByNewest(publishedResearch));
-        setServices(sortByNewest(publishedServices));
-        setProfile(stRes.items?.length ? { ...defaultProfileData, ...stRes.items[0] } : defaultProfileData);
-      } catch {
-        setBlogs([]);
-        setPosters([]);
-        setResearch([]);
-        setServices([]);
-        setProfile(defaultProfileData);
+        const sortedBlogs = sortByNewest(publishedBlogs);
+        const sortedPosters = sortByNewest(publishedPosters);
+        const sortedResearch = sortByNewest(publishedResearch);
+        const sortedServices = sortByNewest(publishedServices);
+        const loadedProfile = settingsItems.length ? { ...defaultProfileData, ...settingsItems[0] } : defaultProfileData;
+
+        setBlogs(sortedBlogs);
+        setPosters(sortedPosters);
+        setResearch(sortedResearch);
+        setServices(sortedServices);
+        setProfile(loadedProfile);
+
+        // Update local storage cache
+        try {
+          localStorage.setItem("anugraha_home_cache", JSON.stringify({
+            blogs: sortedBlogs,
+            posters: sortedPosters,
+            research: sortedResearch,
+            services: sortedServices,
+            profile: loadedProfile,
+          }));
+        } catch (e) {
+          console.warn("Failed to save to local storage", e);
+        }
+      } catch (err) {
+        console.error("Failed to load homepage content:", err);
       } finally {
         setLoading(false);
       }
@@ -116,7 +143,7 @@ export default function SinglePageHome() {
             ) : (
               <>
                 <p className="eyebrow animate-float">{currentProfile.eyebrow}</p>
-                <h1 className="hero-section__heading gradient-text">{currentProfile.title}</h1>
+                <h2 className="hero-section__heading gradient-text">{currentProfile.title}</h2>
                 <p className="hero-section__lead">{currentProfile.lead}</p>
                 <div className="hero-section__actions">
                   <a href="#writing" className="button button--primary">Explore Dispatches</a>
@@ -444,7 +471,55 @@ export default function SinglePageHome() {
           <h2 className="section-heading">Get in Touch</h2>
         </div>
         <div className="contact-layout">
-          <ContactForm initialSubject={chosenSubject} onSubjectChange={setChosenSubject} />
+          <div className="contact-form-wrap">
+            <ContactForm initialSubject={chosenSubject} onSubjectChange={setChosenSubject} />
+          </div>
+          
+          <div className="contact-poster-wrap">
+            <div className="contact-poster-box animate-float-gentle">
+              {profile && profile.contactPoster ? (
+                <>
+                  {/* Blurred background layer to fill empty spaces gracefully */}
+                  <div style={{
+                    position: "absolute",
+                    inset: 0,
+                    backgroundImage: `url(${profile.contactPoster})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    filter: "blur(20px) brightness(0.35)",
+                    opacity: 0.7,
+                    zIndex: 1
+                  }} />
+                  {/* Uncropped foreground poster image */}
+                  <img
+                    src={profile.contactPoster}
+                    alt="Anugraha Pillai - Aeronautical Contact Graphic"
+                    style={{
+                      position: "relative",
+                      zIndex: 2,
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                    }}
+                  />
+                </>
+              ) : (
+                <div className="contact-poster-placeholder">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                  </svg>
+                  <h3 style={{ fontSize: "1.25rem", color: "var(--text-primary)", fontWeight: 700, margin: "0 0 0.5rem" }}>
+                    Aerodynamics Lab
+                  </h3>
+                  <p>
+                    Discuss aerospace research, aerodynamic simulations, and flight structural consulting.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </section>
       <Dialog
