@@ -28,9 +28,9 @@ export default function Footer() {
               }}
             />
             <div>
-              <h3 style={{ margin: 0, fontSize: "1.65rem", lineHeight: 1.2 }}>Anugraha</h3>
+              <h3 style={{ margin: 0, fontSize: "1.65rem", lineHeight: 1.2 }}>Anugraha Pillai</h3>
               <p style={{ margin: ".25rem 0 0", fontSize: ".88rem", color: "var(--lilac)", fontWeight: 500, letterSpacing: ".02em" }}>
-                Aeronautical Engineer &amp; Researcher
+                Aeronautical Engineer
               </p>
             </div>
           </div>

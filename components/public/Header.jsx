@@ -51,7 +51,7 @@ export default function Header() {
             }}
           />
           <span className="site-logo__text">
-            <strong>Anugraha</strong>
+            <strong>Anugraha Pillai</strong>
             <small>Aeronautical Engineer</small>
           </span>
         </Link>
