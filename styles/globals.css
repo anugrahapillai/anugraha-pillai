@@ -472,7 +472,7 @@ section[id] { scroll-margin-top: 5rem; }
   .research-row { grid-template-columns: 1fr; align-items: start; }
   .research-row__action { justify-self: start; }
   .site-footer__container { grid-template-columns: 1fr; gap: 2rem; }
-  .admin-shell { grid-template-columns: 1fr; }.admin-sidebar { position: fixed; left: 0; transform: translateX(-105%); width: 248px; transition: transform .2s ease; }.admin-sidebar.is-open { transform: none; }.admin-menu { display: inline-flex; margin-right: 1rem; }.quick-actions { grid-template-columns: 1fr 1fr; }.dashboard-grid,.editor-layout { grid-template-columns: 1fr; }
+  .admin-shell { grid-template-columns: 1fr; }.admin-sidebar { position: fixed; left: 0; transform: translateX(-105%); width: 248px; transition: transform .2s ease; }.admin-sidebar.is-open { transform: none; }.admin-menu { display: inline-flex; margin-right: 1rem; }.quick-actions { grid-template-columns: 1fr 1fr; }.dashboard-grid,.editor-layout { grid-template-columns: 1fr; }.contact-poster-wrap { display: none !important; }
 }
 @media (max-width: 620px) {
   .site-header__container { padding-inline: 1rem; }
