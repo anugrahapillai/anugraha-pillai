@@ -146,7 +146,7 @@ export default function SinglePageHome() {
                 <h2 className="hero-section__heading gradient-text">{currentProfile.title}</h2>
                 <p className="hero-section__lead">{currentProfile.lead}</p>
                 <div className="hero-section__actions">
-                  <a href="#writing" className="button button--primary">Explore Dispatches</a>
+                  <a href="#writing" className="button button--primary">Explore Blogs</a>
                   <a href="#contact" className="button button--secondary">Contact Anugraha</a>
                 </div>
               </>
@@ -189,7 +189,7 @@ export default function SinglePageHome() {
           </div>
         ) : blogs.length === 0 ? (
           <div style={{ padding: "3rem 1.5rem", textAlign: "center", color: "var(--text-muted)", border: "1px dashed var(--night-border)", borderRadius: "var(--radius-md)" }}>
-            <p style={{ margin: 0, fontSize: "1.05rem" }}>No dispatches published yet. Check back soon!</p>
+            <p style={{ margin: 0, fontSize: "1.05rem" }}>No blogs published yet. Check back soon!</p>
           </div>
         ) : (
           <div style={{ display: "grid", gap: "3rem" }}>
@@ -197,7 +197,7 @@ export default function SinglePageHome() {
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: ".75rem", marginBottom: "1.25rem" }}>
                 <span style={{ fontSize: ".8rem", fontFamily: "var(--font-mono)", fontWeight: 700, color: "var(--lilac)", letterSpacing: ".12em", textTransform: "uppercase" }}>
-                  ✦ RECENT DISPATCHES
+                  ✦ RECENT BLOGS
                 </span>
                 <div style={{ flex: 1, height: "1px", background: "var(--night-border-glow)" }} />
               </div>
@@ -219,7 +219,7 @@ export default function SinglePageHome() {
                     setSelectedArticle(null);
                   }}
                 >
-                  View More Dispatches ↓
+                  View More Blogs ↓
                 </button>
               </div>
             )}
