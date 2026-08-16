@@ -8,6 +8,9 @@ export const metadata = {
     shortcut: "/assets/logo.jpg",
     apple: "/assets/logo.jpg",
   },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
+  },
 };
 
 export default function RootLayout({ children }) {

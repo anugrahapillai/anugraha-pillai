@@ -1,13 +1,23 @@
 import Link from "next/link";
-import { mockContent } from "@/lib/repositories/mock-admin";
+import { firestoreServices } from "@/lib/repositories/firestore-adapters";
 
 export const metadata = {
   title: "Advisory Services — Anugraha Pillai",
   description: "Strategic research, narrative design, and advisory services for public institutions and civic initiatives.",
 };
 
-export default function ServicesPage() {
-  const services = mockContent.filter((i) => i.type === "Service");
+export const revalidate = 60; // Revalidate dynamic listing page every 60s
+
+export default async function ServicesPage() {
+  const res = await firestoreServices.list({ state: "published" });
+  const services = (res.items || []).filter((i) => i.status === "published" || !i.status);
+
+  // Sort by newest
+  const sortedServices = [...services].sort((a, b) => {
+    const timeA = new Date(a.updatedAt || a.createdAt || a.publishedAt || 0).getTime();
+    const timeB = new Date(b.updatedAt || b.createdAt || b.publishedAt || 0).getTime();
+    return timeB - timeA;
+  });
 
   return (
     <div className="page-container">
@@ -18,8 +28,8 @@ export default function ServicesPage() {
       </header>
 
       <section className="services-grid">
-        {services.length ? (
-          services.map((srv) => (
+        {sortedServices.length ? (
+          sortedServices.map((srv) => (
             <div key={srv.id} className="service-card">
               <span className="eyebrow">{srv.category}</span>
               <h3>{srv.title}</h3>

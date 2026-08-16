@@ -103,20 +103,6 @@ export default function Footer() {
             >
               Services
             </a>
-
-            <Link
-              href="/admin/login"
-              style={{
-                color: "var(--text-muted)",
-                textDecoration: "none",
-                fontSize: ".88rem",
-                fontFamily: "var(--font-mono)",
-                transition: "color 0.2s ease",
-              }}
-              className="footer-nav-link"
-            >
-              CMS Admin Studio
-            </Link>
           </div>
         </div>
       </div>

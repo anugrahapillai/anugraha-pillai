@@ -1,18 +1,27 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { mockContent } from "@/lib/repositories/mock-admin";
+import { firestoreResearch } from "@/lib/repositories/firestore-adapters";
 import { formatDate } from "@/lib/client/date-utils";
 import { markdownToHtml } from "@/lib/client/markdown";
 
+export const revalidate = 60; // Revalidate dynamic page every 60s
+
 export async function generateStaticParams() {
-  return mockContent
-    .filter((i) => i.type === "Research" && i.slug)
-    .map((i) => ({ slug: i.slug }));
+  try {
+    const res = await firestoreResearch.list({ state: "published" });
+    return (res.items || [])
+      .filter((i) => i.status === "published" || !i.status)
+      .filter((i) => i.slug)
+      .map((i) => ({ slug: i.slug }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const item = mockContent.find((i) => i.slug === slug || i.id === slug);
+  const res = await firestoreResearch.list({ state: "published" });
+  const item = (res.items || []).find((i) => i.slug === slug || i.id === slug);
   if (!item) return { title: "Research & Analysis Not Found — Anugraha Pillai" };
   return {
     title: `${item.title} — Anugraha Pillai`,
@@ -22,7 +31,8 @@ export async function generateMetadata({ params }) {
 
 export default async function ResearchDetailPage({ params }) {
   const { slug } = await params;
-  const item = mockContent.find((i) => i.slug === slug || i.id === slug);
+  const res = await firestoreResearch.list({ state: "published" });
+  const item = (res.items || []).find((i) => i.slug === slug || i.id === slug);
 
   if (!item) {
     notFound();

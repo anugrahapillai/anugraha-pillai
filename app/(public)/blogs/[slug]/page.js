@@ -1,18 +1,27 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { mockContent } from "@/lib/repositories/mock-admin";
+import { firestorePosts } from "@/lib/repositories/firestore-adapters";
 import { formatDate } from "@/lib/client/date-utils";
 import { markdownToHtml } from "@/lib/client/markdown";
 
+export const revalidate = 60; // Revalidate dynamic article details page every 60s
+
 export async function generateStaticParams() {
-  return mockContent
-    .filter((i) => i.type === "Blog" && i.slug)
-    .map((i) => ({ slug: i.slug }));
+  try {
+    const res = await firestorePosts.list({ state: "published" });
+    return (res.items || [])
+      .filter((i) => i.status === "published" || !i.status)
+      .filter((i) => i.slug)
+      .map((i) => ({ slug: i.slug }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const post = mockContent.find((i) => i.slug === slug || i.id === slug);
+  const res = await firestorePosts.list({ state: "published" });
+  const post = (res.items || []).find((i) => i.slug === slug || i.id === slug);
   if (!post) return { title: "Aero Outlook Not Found — Anugraha Pillai" };
   return {
     title: `${post.title} — Anugraha Pillai`,
@@ -22,7 +31,8 @@ export async function generateMetadata({ params }) {
 
 export default async function BlogDetailPage({ params }) {
   const { slug } = await params;
-  const post = mockContent.find((i) => i.slug === slug || i.id === slug);
+  const res = await firestorePosts.list({ state: "published" });
+  const post = (res.items || []).find((i) => i.slug === slug || i.id === slug);
 
   if (!post) {
     notFound();
@@ -35,7 +45,7 @@ export default async function BlogDetailPage({ params }) {
         <span className="eyebrow">{post.category || "Aero Outlook"}</span>
         <h1>{post.title}</h1>
         <div className="article-detail__meta">
-          <time>Published {formatDate(post.publishedAt)}</time> · <span></span>
+          <time>Published {formatDate(post.publishedAt)}</time>
         </div>
       </header>
 
@@ -50,7 +60,6 @@ export default async function BlogDetailPage({ params }) {
 
       <footer className="article-detail__footer">
         <Link href="/blogs" className="button button--secondary">← Return to Aero Outlook</Link>
-        <Link href="/contact" className="button button--primary">Discuss this dispatch</Link>
       </footer>
     </article>
   );
