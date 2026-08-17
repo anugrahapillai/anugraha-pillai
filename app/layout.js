@@ -1,12 +1,12 @@
 import "@/styles/globals.css";
 
 export const metadata = {
-  title: "Anugraha Pillai | Aeronautical Engineer & Aerospace Researcher",
+  title: "Anugraha Pillai | Aeronautical Engineer",
   description: "Personal portfolio, technical dispatches, research papers, CFD visual posters, and aerospace engineering advisory.",
   icons: {
-    icon: "/assets/logo.jpg",
-    shortcut: "/assets/logo.jpg",
-    apple: "/assets/logo.jpg",
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
   },
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
