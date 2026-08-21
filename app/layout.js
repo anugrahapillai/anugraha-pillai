@@ -1,8 +1,9 @@
 import "@/styles/globals.css";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata = {
   title: "Anugraha Pillai | Aeronautical Engineer",
-  description: "Personal portfolio, technical dispatches, research papers, CFD visual posters, and aerospace engineering advisory.",
+  description: "Personal portfolio, technical dispatches, research papers, CFD visual posters, and aeronautical engineering advisory.",
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
@@ -16,7 +17,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }

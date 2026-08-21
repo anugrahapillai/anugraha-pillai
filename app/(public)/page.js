@@ -17,8 +17,8 @@ const defaultResearch = [];
 const defaultServices = [];
 
 const defaultProfileData = {
-  eyebrow: "Aeronautical Engineer & Aerospace Researcher",
-  title: "Advancing aerodynamics, flight dynamics, and aerospace innovation.",
+  eyebrow: "Aeronautical Engineer",
+  title: "Advancing aerodynamics, flight dynamics, and aeronautical innovation.",
   lead: "Exploring high-speed aerodynamics, sustainable propulsion, structural analysis, and autonomous flight stability through technical research and engineering design.",
   aboutBio: "Anugraha is an Aeronautical Engineer specializing in aerodynamics, flight dynamics, computational fluid dynamics (CFD), and advanced propulsion systems. Her research explores high-speed boundary layer behavior, sustainable aviation fuels, and structural integrity under high-stress flight regimes.",
   profilePic: "/assets/profile.jpg",
@@ -161,7 +161,7 @@ export default function SinglePageHome() {
               ) : (
                 <img
                   src={currentProfile.profilePic || "/assets/profile.jpg"}
-                  alt="Anugraha Pillai - Aeronautical Engineer & Aerospace Researcher"
+                  alt="Anugraha Pillai - Aeronautical Engineer"
                 />
               )}
             </div>
